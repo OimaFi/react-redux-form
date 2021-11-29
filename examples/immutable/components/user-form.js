@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Immutable from 'immutable';
 import { Field, Form, Errors, actions } from 'react-redux-form/immutable';
 
 import SubmitButton from './submit-button';
@@ -89,7 +89,7 @@ class UserForm extends React.Component {
 }
 
 UserForm.propTypes = {
-  dispatch: React.PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default connect()(UserForm);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const SubmitButton = ({ user }) =>
@@ -7,9 +8,9 @@ const SubmitButton = ({ user }) =>
   </button>;
 
 SubmitButton.propTypes = {
-  user: React.PropTypes.shape({
-    firstName: React.PropTypes.string.isRequired,
-    lastName: React.PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
   }).isRequired,
 };
 

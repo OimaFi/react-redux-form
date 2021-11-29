@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 
@@ -8,7 +9,7 @@ const SubmitButton = ({ user }) => // user is an Immutable Map
   </button>;
 
 SubmitButton.propTypes = {
-  user: React.PropTypes.instanceOf(Immutable.Map).isRequired,
+  user: PropTypes.instanceOf(Immutable.Map).isRequired,
 };
 
 const mapStateToProps = (state) => {

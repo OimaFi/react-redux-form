@@ -27,7 +27,11 @@ import isNative from '../utils/is-native';
 import initialFieldState from '../constants/initial-field-state';
 import containsEvent from '../utils/contains-event';
 
+import { showErrors } from "./errors-component";
+
 import ComponentWrapper from './control-strip-defaults-component';
+import getForm from "../utils/get-form";
+import isValid from "../form/is-valid";
 
 const disallowedProps = ['changeAction', 'getFieldFromState', 'store'];
 
@@ -159,9 +163,9 @@ function createControlClass(s) {
 
     shouldComponentUpdate(nextProps, nextState) {
       return !shallowEqual(this.props, nextProps, {
-        deepKeys: ['controlProps'],
-        omitKeys: ['mapProps'],
-      })
+          deepKeys: ['controlProps'],
+          omitKeys: ['mapProps'],
+        })
         || !shallowEqual(this.state.viewValue, nextState.viewValue);
     }
 
@@ -541,11 +545,11 @@ function createControlClass(s) {
         const eventActions = [
           eventAction && eventAction(model),
           (forceUpdate || containsEvent(validateOn, eventName))
-            && this.getValidateAction(persistedEvent, eventName, forceUpdate),
+          && this.getValidateAction(persistedEvent, eventName, forceUpdate),
           (forceUpdate || containsEvent(asyncValidateOn, eventName))
-            && this.getAsyncValidateAction(persistedEvent, eventName),
+          && this.getAsyncValidateAction(persistedEvent, eventName),
           (forceUpdate || containsEvent(updateOn, eventName))
-            && this.getChangeAction(persistedEvent),
+          && this.getChangeAction(persistedEvent),
         ];
 
         dispatchBatchIfNeeded(model, eventActions, dispatch);
@@ -656,12 +660,17 @@ function createControlClass(s) {
         mappedProps.fieldValue = fieldValue;
       }
 
+      const hasErrors = controlProps.hasErrors;
+
       // If there is an existing control, clone it
       if (control) {
+        // console.log(fieldValue);
         return cloneElement(
           control,
           {
             ...mappedProps,
+            'aria-invalid': hasErrors,
+            ...(hasErrors && { 'aria-describedby': `${this.props.model}Error` }),
             defaultValue: undefined,
             defaultChecked: undefined,
           },
@@ -674,6 +683,8 @@ function createControlClass(s) {
           component,
           ...controlProps,
           ...mappedProps,
+          'aria-invalid': hasErrors,
+          ...(hasErrors && { 'aria-describedby': `${this.props.model}Error` }),
         }
       );
     }
@@ -705,15 +716,18 @@ function createControlClass(s) {
       controlProps,
     } = props;
 
-    const finalControlProps = {
-      ...controlProps,
-      ...omit(props, disallowedPropTypeKeys),
-    };
-
     const modelString = getModel(model, state);
     const fieldValue = s.getFieldFromState(state, modelString)
       || initialFieldState;
     const modelValue = s.get(state, modelString);
+    const form = getForm(state, modelString);
+    const show = (!fieldValue.pristine && fieldValue.touched) || fieldValue.submitFailed;
+
+    const finalControlProps = {
+      ...controlProps,
+      ...omit(props, disallowedPropTypeKeys),
+      hasErrors: !isValid(fieldValue) && showErrors(fieldValue, form.$form, show),
+    };
 
     return {
       model: modelString,

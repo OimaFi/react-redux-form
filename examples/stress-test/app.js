@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-window.React = require('react/lib/ReactWithAddons');
+//window.React = require('react/lib/ReactWithAddons');
 
 import { Provider, connect } from 'react-redux';
 import {

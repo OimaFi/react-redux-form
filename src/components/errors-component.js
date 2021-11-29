@@ -60,7 +60,7 @@ const propTypes = {
   storeSubscription: PropTypes.any,
 };
 
-function showErrors(field, form, show = true) {
+export function showErrors(field, form, show = true) {
   if (typeof show === 'function') {
     return show(field, form);
   }
@@ -156,6 +156,7 @@ function createErrorsClass(s = defaultStrategy) {
         ? this.props
         : omit(this.props, Object.keys(propTypes));
 
+      console.log(showErrors(fieldValue, formValue, show));
       if (!showErrors(fieldValue, formValue, show)) {
         return null;
       }
@@ -164,11 +165,16 @@ function createErrorsClass(s = defaultStrategy) {
         ? null
         : this.mapErrorMessages(fieldValue.errors);
 
+      console.log(errorMessages);
+
       if (!errorMessages) return null;
 
       return React.createElement(
         wrapper,
-        allowedProps,
+        {
+          ...allowedProps,
+          id: `${this.props.model}Error`,
+        },
         errorMessages);
     }
   }
