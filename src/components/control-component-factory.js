@@ -664,7 +664,6 @@ function createControlClass(s) {
 
       // If there is an existing control, clone it
       if (control) {
-        // console.log(fieldValue);
         return cloneElement(
           control,
           {

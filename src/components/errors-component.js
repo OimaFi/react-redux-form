@@ -156,7 +156,6 @@ function createErrorsClass(s = defaultStrategy) {
         ? this.props
         : omit(this.props, Object.keys(propTypes));
 
-      console.log(showErrors(fieldValue, formValue, show));
       if (!showErrors(fieldValue, formValue, show)) {
         return null;
       }
@@ -164,8 +163,6 @@ function createErrorsClass(s = defaultStrategy) {
       const errorMessages = isValid(fieldValue)
         ? null
         : this.mapErrorMessages(fieldValue.errors);
-
-      console.log(errorMessages);
 
       if (!errorMessages) return null;
 
